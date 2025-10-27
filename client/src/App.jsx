@@ -1,35 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
+import "./styles/globals.css";
+
+
+// Pages
+import POSPage from "./pages/POSPage";
+
+// Data
+import { menuData } from "./data/menuData"; 
+// Components
+import Header from "./components/layout/Header";
+
+import "./styles/scrollbar.css";
+
+// Hooks
+import useCart from "./hooks/useCart";
+
+// Utils
+import { calculateCartTotals } from "./utils/calculations";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const {
+    cart: cartItems,
+    addToCart,
+    updateQuantity,
+    removeFromCart,
+    clearCart,
+    getTotalItems,
+  } = useCart();
+
+  const { subtotal, tax, discount, total } = calculateCartTotals(cartItems);
+  const totalItems = getTotalItems();
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-900 via-purple-900 to-indigo-900">
+      {/* Header */}
+      <Header totalItems={totalItems} />
+
+      {/* POS Page */}
+      <main className="flex-1">
+        <POSPage
+          menuData={menuData}
+          cartItems={cartItems}
+          addToCart={addToCart}
+          removeFromCart={removeFromCart}
+          clearCart={clearCart}
+          updateQuantity={updateQuantity}
+          total={total}
+        />
+      </main>
+
+      {/* Footer */}
+      <footer className="text-center py-4 bg-purple-950/40 border-t border-purple-800/40 text-sm text-purple-300">
+        © 2025 Rom’s Restaurant POS | Built with ❤️ using React + Tailwind CSS
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;
