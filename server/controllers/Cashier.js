@@ -33,13 +33,18 @@ exports.registerCashier = async (req, res) => {
 exports.loginCashier = async (req, res) => {
   try {
     const { email, password } = req.body;
+    if(email===process.env.ADMIN_EMAIL){
+      if(password !== process.env.ADMIN_PASSWORD){
+        return res.status(400).json({error: "Invalid Admin credentials"})
+      }
+      const token = jwt.sign({email,role: true},process.env.JWT_SECRET,{expiresIn: "1d"})
+      return res.status(200).json({message:"Admin Login successful",token, user: {email, role: true}});
+    }
     const cashier = await Cashier.findOne({ email });
-
     if (!cashier) return res.status(404).json({ error: "Cashier not found" });
-
     const isMatch = await bcrypt.compare(password, cashier.password);
     if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
-    const token = jwt.sign({id: cashier._id,role: cashier.isAdmin},process.env.jwt_secret,{expiresIn: "1d"})
+    const token = jwt.sign({id: cashier._id,role: false},process.env.JWT_SECRET,{expiresIn: "1d"})
     return res.status(200).json({message:"Login successful",token,cashier});
   } catch (err) {
     console.error(err);
@@ -48,6 +53,9 @@ exports.loginCashier = async (req, res) => {
 };
 exports.currentUser = async (req,res) => {
     try{
+        if(req.user.role){
+          return res.status(200).json({email: process.env.ADMIN_EMAIL, role: true})
+        }
         const customer = await Customer.findById(req.user.id)
         return res.status(200).json(customer)
     }catch(err){

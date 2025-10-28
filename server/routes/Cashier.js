@@ -6,7 +6,8 @@ const {
   currentUser
 } = require("../controllers/Cashier");
 const verifyToken = require("../middleware/authentication")
-router.post("/register", registerCashier);
+const verifyAdmin = require("../middleware/authorization")
+router.post("/register",verifyToken, verifyAdmin, registerCashier);
 router.post("/login", loginCashier);
 router.get("/current-user",verifyToken,currentUser)
 

@@ -6,7 +6,6 @@ const CashierModel = new mongoose.Schema({
     gender: {type: String,enum:["male","female","trans"], required: true},
     email: {type: String, unique: true, required: true},
     password: {type: String, required: true},
-    isAdmin: {type: Boolean,default: false},
     restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant", required: true}
 },{versionKey: false})
 module.exports = mongoose.model("cashiers",CashierModel)
