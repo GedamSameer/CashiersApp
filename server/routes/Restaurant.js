@@ -1,0 +1,13 @@
+const express = require("express")
+const router = express.Router()
+const {getAllRestaurants,searchRestaurant,getRestaurantById,createRestaurant,updateRestaurantById,deleteRestaurantById} = require("../controllers/Restaurant")
+const ValidateObjectId = require("../middleware/validation")
+const verifyToken = require("../middleware/authentication")
+const verifyAdmin = require("../middleware/authorization")
+router.get("/restaurants",verifyToken,getAllRestaurants)
+router.get("/search-restaurants",verifyToken,searchRestaurant)
+router.get("/restaurants/:id",ValidateObjectId,verifyToken,getRestaurantById)
+router.post("/restaurants",verifyToken,verifyAdmin,createRestaurant)
+router.put("/restaurants/:id",ValidateObjectId,verifyToken,verifyAdmin,updateRestaurantById)
+router.delete("/restaurants/:id",ValidateObjectId,verifyToken,verifyAdmin,deleteRestaurantById)
+module.exports = router
