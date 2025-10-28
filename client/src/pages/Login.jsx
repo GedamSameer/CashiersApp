@@ -12,7 +12,7 @@ const Login = () => {
         await  loginCashier(loginData) 
         const loggedCashier = useCashierStore.getState().user
         alert("You are logged in successfully")
-        if(loggedCashier.isAdmin) navigate("/admin")
+        if(loggedCashier?.role) navigate("/admin")
         else navigate("/cashier")
     }
     const handleChange = (e) => {

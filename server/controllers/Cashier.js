@@ -45,7 +45,7 @@ exports.loginCashier = async (req, res) => {
     const isMatch = await bcrypt.compare(password, cashier.password);
     if (!isMatch) return res.status(400).json({ error: "Invalid credentials" });
     const token = jwt.sign({id: cashier._id,role: false},process.env.JWT_SECRET,{expiresIn: "1d"})
-    return res.status(200).json({message:"Login successful",token,cashier});
+    return res.status(200).json({message:"Login successful",token,user: { ...cashier._doc, role: false }});
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: err.message });
