@@ -46,3 +46,12 @@ exports.loginCashier = async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+exports.currentUser = async (req,res) => {
+    try{
+        const customer = await Customer.findById(req.user.id)
+        return res.status(200).json(customer)
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({error: err.message})
+    }
+}
