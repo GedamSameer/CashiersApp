@@ -1,0 +1,13 @@
+const express = require("express")
+const router = express.Router()
+const {getAllMenuItems,searchMenuItem,getMenuItemById,createMenuItem,updateMenuItemById,deleteMenuItemById} = require("../controllers/Menu")
+const ValidateObjectId = require("../middleware/validation")
+const verifyToken = require("../middleware/authentication")
+const verifyAdmin = require("../middleware/authorization")
+router.get("/menu-items",verifyToken,getAllMenuItems)
+router.get("/search-menu-items",verifyToken,searchMenuItem)
+router.get("/menu-items/:id",ValidateObjectId,verifyToken,getMenuItemById)
+router.post("/menu-items",verifyToken,verifyAdmin,createMenuItem)
+router.put("/menu-items/:id",ValidateObjectId,verifyToken,verifyAdmin,updateMenuItemById)
+router.delete("/menu-items/:id",ValidateObjectId,verifyToken,verifyAdmin,deleteMenuItemById)
+module.exports = router

@@ -1,9 +1,9 @@
 const Restaurant = require("../models/Restaurant")
 exports.getAllRestaurants = async (req,res) => {
     try{
-        const restaurant = await Restaurant.find({})
-        if(!restaurant) return res.status(404).json({error: "No restaurants found"})
-        return res.status(200).json(restaurant)
+        const restaurants = await Restaurant.find({})
+        if(!restaurants || restaurants.length === 0) return res.status(404).json({error: "No restaurants found"})
+        return res.status(200).json(restaurants)
     }catch(err){
         console.error(err)
         return res.status(500).json({error: "Server error"})
@@ -14,7 +14,7 @@ exports.searchRestaurant = async (req,res) => {
         const search = req.query.search || ""
         const query = search ? {restaurantName: {$regex:search,$options:"i"}}:{}
         const restaurants = await Restaurant.find(query).limit(10)
-        if(!restaurants) return res.status(404).json({error: "No restaurants found"})
+        if(restaurants.length === 0) return res.status(404).json({error: "No restaurants found"})
         return res.status(200).json(restaurants)
     }catch (err){
         console.error(err)

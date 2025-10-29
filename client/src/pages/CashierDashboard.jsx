@@ -2,12 +2,14 @@
 import React, { useState, useEffect } from "react";
 import { LogOut, Clock, ChevronDown, CheckCircle2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import useCashierStore from "../zustand-stores/cashierStore";
 
 const CashierDashboard = () => {
     const [filter, setFilter] = useState("All");
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [currentTime, setCurrentTime] = useState("");
     const [orders, setOrders] = useState([]);
+    const logout = useCashierStore(state => state.logout)
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -72,7 +74,8 @@ const CashierDashboard = () => {
         localStorage.removeItem("user");
         localStorage.removeItem("token");
         sessionStorage.clear();
-        navigate("/login");
+        logout()
+        navigate("/");
     };
 
 

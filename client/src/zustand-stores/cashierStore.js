@@ -10,7 +10,7 @@ const cashierStore = (set) => ({
     registerCashier: async (payload) => {
         set({loading: true})
         const {data,error} = await RegisterCashier(payload)
-        set({loading: false,user:data?.cashier||null,error})
+        set({loading: false,user:data?.user||null,error})
     },
     loginCashier: async (payload) => {
         set({loading: true})
