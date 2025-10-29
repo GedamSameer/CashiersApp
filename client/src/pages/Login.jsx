@@ -1,6 +1,6 @@
 import { useState } from "react"
 import useCashierStore from "../zustand-stores/cashierStore"
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 const Login = () => {
     const [loginData, setLoginData] = useState({ email: "", password: "" })
     const loading = useCashierStore((state) => state.loading)
@@ -9,10 +9,9 @@ const Login = () => {
     const navigate = useNavigate()
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await loginCashier(loginData)
-        const loggedCashier = useCashierStore.getState().user
-        alert("You are logged in successfully")
-        if (loggedCashier?.role){
+        const user = await loginCashier(loginData)
+        if(!user) return
+        if (user?.role){
             navigate("/admin")
         } 
         else {

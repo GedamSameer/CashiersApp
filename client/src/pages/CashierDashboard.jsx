@@ -9,6 +9,7 @@ const CashierDashboard = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [currentTime, setCurrentTime] = useState("");
     const [orders, setOrders] = useState([]);
+    const user = useCashierStore(state => state.user)
     const logout = useCashierStore(state => state.logout)
     const navigate = useNavigate();
 
@@ -95,7 +96,7 @@ const CashierDashboard = () => {
                         {currentTime}
                     </div>
                     <span className="text-base sm:text-lg font-semibold text-purple-200">
-                        Welcome, Cashier 👑
+                        Welcome, {user.name} 👑
                     </span>
                     <button
                         onClick={handleLogout}

@@ -16,6 +16,7 @@ const cashierStore = (set) => ({
         set({loading: true})
         const {data,error} = await LoginCashier(payload)
         set({loading: false,user:data?.user||null,token: data?.token || null,error})
+        return data?.user
     },
     getCurrentCashier: async () => {
         set({loading: true})

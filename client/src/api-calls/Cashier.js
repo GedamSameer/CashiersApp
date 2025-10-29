@@ -4,7 +4,9 @@ const makeRequest = async (callback) => {
         const response = await callback()
         return {data: response.data, error: null}
     }catch(err){
-        return {data: null, error: err.message}
+        const backendError = err.response?.data?.error;
+        const errorMessage = backendError || err.message || "Something went wrong"
+        return {data: null, error: errorMessage}
     }
 }
 export const RegisterCashier = async (payload) => makeRequest(() => axiosInstance.post("/api/register",payload))

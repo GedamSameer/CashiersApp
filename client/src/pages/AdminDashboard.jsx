@@ -1,15 +1,18 @@
 import React from "react";
 import { LogOut, PlusCircle, Eye, Users, Utensils } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import useCashierStore from "../zustand-stores/cashierStore";
 const AdminDashboard = () => {
   const navigate = useNavigate();
-
+  const user = useCashierStore(state => state.user)
+  console.log(user)
+  const logout = useCashierStore(state => state.logout)
   const handleLogout = () => {
     localStorage.removeItem("admin");
     localStorage.removeItem("token");
     sessionStorage.clear();
-    navigate("/login");
+    logout()
+    navigate("/");
   };
 
   return (
