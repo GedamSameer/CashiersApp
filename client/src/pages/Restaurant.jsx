@@ -74,7 +74,7 @@ const Restaurant = () => {
           value={newRestaurant.name}
           onChange={handleChange}
           placeholder="Restaurant Name"
-          className="w-full p-2 mb-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+          className="w-full p-2 mb-3  text-black border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
         />
         <input
           type="text"
@@ -82,7 +82,7 @@ const Restaurant = () => {
           value={newRestaurant.location}
           onChange={handleChange}
           placeholder="Location"
-          className="w-full p-2 mb-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+          className="w-full p-2 mb-3 text-black border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
         />
         <input
           type="number"
@@ -90,7 +90,7 @@ const Restaurant = () => {
           value={newRestaurant.rating}
           onChange={handleChange}
           placeholder="Rating (0–5)"
-          className="w-full p-2 mb-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+          className="w-full p-2 mb-3 text-black border rounded-md focus:outline-none focus:ring-2 focus:ring-black"
         />
 
         {editingId ? (
