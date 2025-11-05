@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ShoppingCart, Trash2, Plus, Minus, DollarSign, Package, Search, X } from 'lucide-react';
 
-const Project = () => {
+const Menu = () => {
   const [products] = useState([
     { id: 1, name: 'Masala Chai', price: 40, category: 'Beverages', image: '☕' },
     { id: 2, name: 'Veg Sandwich', price: 120, category: 'Snacks', image: '🥪' },
@@ -290,4 +290,4 @@ const Project = () => {
   );
 };
 
-export default Project;
+export default Menu;

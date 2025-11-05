@@ -35,7 +35,7 @@
 import React, { useState } from 'react';
 import { Plus, Minus, Trash2, Edit2, Save, X, ShoppingCart, Receipt, Search, Package, ClipboardList } from 'lucide-react';
 
-const initialMenuData = [
+const MenuData = [
   { id: 1, name: "Masala Chai", category: "Beverages", price: 40, emoji: "☕" },
   { id: 2, name: "Veg Sandwich", category: "Snacks", price: 120, emoji: "🍔" },
   { id: 3, name: "Green Salad", category: "Starters", price: 150, emoji: "🥗" },
@@ -596,5 +596,5 @@ function RestaurantPOS() {
 }
 
 
-export default RestaurantPOS;
+export default MenuData;
 

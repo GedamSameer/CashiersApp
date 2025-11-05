@@ -45,7 +45,7 @@ const AdminDashboard = () => {
 
           <div className="flex flex-col space-y-5">
             <button
-              onClick={() => navigate("/add-restaurant")}
+              onClick={() => navigate("/restaurant")}
               className="bg-gradient-to-r from-purple-500 to-pink-800 hover:from-purple-800 hover:to-pink-700 transition-all duration-300 px-6 py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center space-x-2"
             >
               <PlusCircle size={22} />
@@ -53,7 +53,7 @@ const AdminDashboard = () => {
             </button>
 
             <button
-              onClick={() => navigate("/orders")}
+              onClick={() => navigate("/adminorderlist")}
               className="bg-gradient-to-r from-indigo-400 to-blue-600 hover:from-indigo-800 hover:to-blue-600 transition-all duration-300 px-6 py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center space-x-2"
             >
               <Eye size={22} />
@@ -70,7 +70,7 @@ const AdminDashboard = () => {
 
           <div className="flex flex-col space-y-5">
             <button
-              onClick={() => navigate("/add-cashier")}
+              onClick={() => navigate("/addcashier")}
               className="bg-gradient-to-r from-green-400 to-emerald-600 hover:from-green-800 hover:to-emerald-600 transition-all duration-300 px-6 py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center space-x-2"
             >
               <Users size={22} />
@@ -78,7 +78,7 @@ const AdminDashboard = () => {
             </button>
 
             <button
-              onClick={() => navigate("/project")}
+              onClick={() => navigate("/changemenu")}
               className="bg-gradient-to-r from-yellow-200 to-orange-600 hover:from-yellow-600 hover:to-orange-500 transition-all duration-300 px-6 py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center space-x-2"
             >
               <Utensils size={22} />

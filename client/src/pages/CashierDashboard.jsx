@@ -208,7 +208,7 @@ const CashierDashboard = () => {
 
 
                     <button
-                        onClick={() => navigate("/orders")}
+                        onClick={() => navigate("/order")}
                         className="bg-purple-700 hover:bg-purple-800 transition-all duration-300 px-5 py-3 rounded-xl shadow-lg font-semibold tracking-wide w-full mt-6"
                     >
                         View All Orders
@@ -230,7 +230,7 @@ const CashierDashboard = () => {
                     </div>
 
                     <button
-                        onClick={() => navigate("/project")}
+                        onClick={() => navigate("/Menu")}
                         className="bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-700 hover:to-emerald-600 transition-all duration-300 px-6 py-4 rounded-xl font-bold text-lg shadow-lg w-full"
                     >
                         + New Order
