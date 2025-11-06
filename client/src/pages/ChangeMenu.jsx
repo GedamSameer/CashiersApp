@@ -1,177 +1,227 @@
 import React, { useState } from "react";
-import { PlusCircle, Trash2, Edit2, X, Check } from "lucide-react";
+import { PlusCircle, Trash2, Edit2, X, Check, Search } from "lucide-react";
 
 const ChangeMenu = () => {
   const [menu, setMenu] = useState([
-    { id: 1, name: "Masala Chai", price: 40, category: "Beverages", emoji: "☕" },
-    { id: 2, name: "Veg Sandwich", price: 120, category: "Snacks", emoji: "🥪" },
-    { id: 3, name: "Pizza", price: 280, category: "Main Course", emoji: "🍕" },
-    { id: 4, name: "Gulab Jamun", price: 80, category: "Dessert", emoji: "🍡" },
+    { id: 1, name: "Masala Chai", price: 40, category: "Beverages", emoji: "☕", description: "Traditional Indian spiced tea brewed with milk and aromatic spices." },
+    { id: 2, name: "Veg Sandwich", price: 120, category: "Snacks", emoji: "🥪", description: "Fresh vegetables layered with butter and chutney between toasted bread slices." },
+    { id: 3, name: "Pizza", price: 280, category: "Main Course", emoji: "🍕", description: "Cheesy pizza topped with vegetables and herbs baked to perfection." },
+    { id: 4, name: "Gulab Jamun", price: 80, category: "Dessert", emoji: "🍡", description: "Soft and sweet fried dumplings soaked in warm sugar syrup." },
+    { id: 5, name: "Fresh Juice", price: 90, category: "Beverages", emoji: "🧃", description: "Refreshing seasonal fruit juice served chilled." },
+   
+    { id: 6, name: "Herbal Tea", price: 50, category: "Beverages", emoji: "🍵", description: "A soothing blend of herbs and green tea leaves to calm your senses." },
+    { id: 7, name: "Pasta Alfredo", price: 220, category: "Main Course", emoji: "🍝", description: "Creamy white sauce pasta with herbs, cheese, and sautéed vegetables." },
+    { id: 8, name: "Samosa", price: 30, category: "Snacks", emoji: "🥟", description: "Crispy fried pastry filled with spicy potato mixture." },
+    { id: 9, name: "Chocolate Cake", price: 140, category: "Dessert", emoji: "🍰", description: "Moist chocolate sponge layered with rich chocolate frosting." },
+    { id: 10, name: "Cold Coffee", price: 90, category: "Beverages", emoji: "🥤", description: "Iced coffee blended with milk, cream, and sugar." },
   ]);
 
-  const [newDish, setNewDish] = useState({ name: "", price: "", category: "", emoji: "" });
+  const [newDish, setNewDish] = useState({ name: "", price: "", category: "", emoji: "", description: "" });
   const [editingDish, setEditingDish] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
 
-  const categories = ["Beverages", "Snacks", "Starters", "Main Course", "Breads", "Dessert"];
+  const categories = ["All", "Beverages", "Snacks", "Starters", "Main Course", "Breads", "Dessert"];
 
   const handleAddDish = () => {
-    if (!newDish.name || !newDish.price || !newDish.category) return alert("Please fill all fields!");
+    if (!newDish.name || !newDish.price || !newDish.category)
+      return alert("Please fill all required fields!");
     setMenu([
       ...menu,
       { ...newDish, id: Date.now(), price: parseFloat(newDish.price) },
     ]);
-    setNewDish({ name: "", price: "", category: "", emoji: "" });
+    setNewDish({ name: "", price: "", category: "", emoji: "", description: "" });
   };
 
-  const handleDeleteDish = (id) => {
-    setMenu(menu.filter((dish) => dish.id !== id));
-  };
+  const handleDeleteDish = (id) => setMenu(menu.filter((dish) => dish.id !== id));
 
-  const handleEditDish = (dish) => {
-    setEditingDish(dish);
-  };
+  const handleEditDish = (dish) => setEditingDish(dish);
 
   const handleSaveEdit = () => {
-    setMenu(
-      menu.map((dish) => (dish.id === editingDish.id ? editingDish : dish))
-    );
+    setMenu(menu.map((dish) => (dish.id === editingDish.id ? editingDish : dish)));
     setEditingDish(null);
   };
 
+  const filteredMenu = menu.filter((dish) => {
+    const matchesSearch = dish.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = activeCategory === "All" || dish.category === activeCategory;
+    return matchesSearch && matchesCategory;
+  });
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-      <div className="bg-black bg-opacity-60 backdrop-blur-sm rounded-lg w-[600px] h-[500px] flex flex-col items-center justify-start p-4 overflow-y-auto">
+    <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row px-4 py-6 md:px-8 md:py-10">
+      
+      <div className="bg-gradient-to-br from-purple-700 to-purple-900 text-white rounded-2xl shadow-xl p-6 w-full md:w-1/3 mb-6 md:mb-0 md:mr-6 flex flex-col justify-between">
+        <div>
+          <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
+            <PlusCircle size={26} /> Add New Dish
+          </h1>
 
-        
-        <h1 className="text-3xl font-bold text-white mb-6 flex items-center gap-3">
-          <PlusCircle className="text-purple-400" /> Manage Menu
-        </h1>
-
-        <div className="flex flex-col space-y-3 w-full mb-6">
-          <input
-            type="text"
-            placeholder="Dish Name"
-            value={newDish.name}
-            onChange={(e) => setNewDish({ ...newDish, name: e.target.value })}
-            className="p-2 rounded-lg text-lg text-black bg-white border border-purple-900 focus:outline-none focus:ring-2 focus:ring-black"
-          />
-          <input
-            type="number"
-            placeholder="Price"
-            value={newDish.price}
-            onChange={(e) => setNewDish({ ...newDish, price: e.target.value })}
-            className="p-2 rounded-lg text-lg text-black bg-white border border-purple-900 focus:outline-none focus:ring-2 focus:ring-black"
-          />
-          <select
-            value={newDish.category}
-            onChange={(e) => setNewDish({ ...newDish, category: e.target.value })}
-            className="p-2 rounded-lg text-lg text-black bg-white border border-purple-900 focus:outline-none focus:ring-2 focus:ring-black"
-          >
-            <option value="">Select Category</option>
-            {categories.map((cat) => (
-              <option key={cat}>{cat}</option>
-            ))}
-          </select>
-          <input
-            type="text"
-            placeholder="Emoji (optional)"
-            value={newDish.emoji}
-            onChange={(e) => setNewDish({ ...newDish, emoji: e.target.value })}
-            className="p-2 rounded-lg text-lg text-black bg-white border border-purple-900 focus:outline-none focus:ring-2 focus:ring-black"
-          />
-
-          <button
-            onClick={handleAddDish}
-            className="bg-purple-900 hover:bg-black transition-colors duration-200 p-2 rounded-lg mt-2 text-lg shadow-lg font-bold text-white"
-          >
-            Add Dish
-          </button>
+          <div className="flex flex-col space-y-3">
+            <input
+              type="text"
+              placeholder="Dish Name"
+              value={newDish.name}
+              onChange={(e) => setNewDish({ ...newDish, name: e.target.value })}
+              className="p-2 rounded-lg text-black"
+            />
+            <input
+              type="number"
+              placeholder="Price"
+              value={newDish.price}
+              onChange={(e) => setNewDish({ ...newDish, price: e.target.value })}
+              className="p-2 rounded-lg text-black"
+            />
+            <select
+              value={newDish.category}
+              onChange={(e) => setNewDish({ ...newDish, category: e.target.value })}
+              className="p-2 rounded-lg text-black"
+            >
+              <option value="">Select Category</option>
+              {categories.slice(1).map((cat) => (
+                <option key={cat}>{cat}</option>
+              ))}
+            </select>
+            <input
+              type="text"
+              placeholder="Emoji (optional)"
+              value={newDish.emoji}
+              onChange={(e) => setNewDish({ ...newDish, emoji: e.target.value })}
+              className="p-2 rounded-lg text-black"
+            />
+            <textarea
+              placeholder="Description"
+              value={newDish.description}
+              onChange={(e) => setNewDish({ ...newDish, description: e.target.value })}
+              className="p-2 rounded-lg text-black"
+              rows="2"
+            />
+            <button
+              onClick={handleAddDish}
+              className="bg-orange-500 hover:bg-orange-600 transition-all duration-200 p-2 rounded-lg mt-2 font-bold text-white"
+            >
+              Add Dish
+            </button>
+          </div>
         </div>
 
-      
-        <div className="flex flex-col space-y-3 w-full overflow-y-auto">
-          {menu.length === 0 ? (
-            <p className="text-gray-300 text-center">No dishes added yet.</p>
+        <p className="text-sm text-center text-purple-200 mt-6">
+          💡 Tip: Add emojis and descriptions for a more engaging menu.
+        </p>
+      </div>
+
+    
+      <div className="flex-1 bg-white rounded-2xl shadow-lg p-6 overflow-y-auto">
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+          <h2 className="text-2xl font-semibold text-gray-800">Manage Menu</h2>
+
+          
+          <div className="relative w-full sm:w-1/2">
+            <Search size={18} className="absolute top-3 left-3 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search dishes..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10 p-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+            />
+          </div>
+        </div>
+
+        
+        <div className="flex flex-wrap gap-2 mb-6">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                activeCategory === cat
+                  ? "bg-purple-600 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-purple-100"
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+     
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredMenu.length === 0 ? (
+            <p className="text-gray-500 col-span-full text-center">No dishes found.</p>
           ) : (
-            menu.map((dish) => (
+            filteredMenu.map((dish) => (
               <div
                 key={dish.id}
-                className="bg-purple-900 bg-opacity-40 rounded-lg p-4 border border-purple-700 flex justify-between items-center"
+                className="bg-gray-50 hover:bg-purple-50 border border-gray-200 rounded-xl p-4 transition-all shadow-sm hover:shadow-md flex flex-col justify-between"
               >
                 {editingDish?.id === dish.id ? (
-                  <div className="flex flex-col space-y-2 w-full">
+                  <>
                     <input
                       type="text"
                       value={editingDish.name}
-                      onChange={(e) =>
-                        setEditingDish({ ...editingDish, name: e.target.value })
-                      }
-                      className="p-2 rounded-lg text-black bg-white border border-purple-900 focus:ring-2 focus:ring-black"
+                      onChange={(e) => setEditingDish({ ...editingDish, name: e.target.value })}
+                      className="p-2 rounded-lg text-black border"
                     />
                     <input
                       type="number"
                       value={editingDish.price}
-                      onChange={(e) =>
-                        setEditingDish({
-                          ...editingDish,
-                          price: parseFloat(e.target.value),
-                        })
-                      }
-                      className="p-2 rounded-lg text-black bg-white border border-purple-900 focus:ring-2 focus:ring-black"
+                      onChange={(e) => setEditingDish({ ...editingDish, price: parseFloat(e.target.value) })}
+                      className="p-2 rounded-lg text-black border mt-2"
+                    />
+                    <textarea
+                      value={editingDish.description}
+                      onChange={(e) => setEditingDish({ ...editingDish, description: e.target.value })}
+                      className="p-2 rounded-lg text-black border mt-2"
+                      rows="2"
                     />
                     <select
                       value={editingDish.category}
-                      onChange={(e) =>
-                        setEditingDish({
-                          ...editingDish,
-                          category: e.target.value,
-                        })
-                      }
-                      className="p-2 rounded-lg text-black bg-white border border-purple-900 focus:ring-2 focus:ring-black"
+                      onChange={(e) => setEditingDish({ ...editingDish, category: e.target.value })}
+                      className="p-2 rounded-lg text-black border mt-2"
                     >
-                      {categories.map((cat) => (
+                      {categories.slice(1).map((cat) => (
                         <option key={cat}>{cat}</option>
                       ))}
                     </select>
-                    <div className="flex justify-end gap-2">
+                    <div className="flex justify-end gap-2 mt-3">
                       <button
                         onClick={handleSaveEdit}
-                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold"
+                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-lg flex items-center gap-1"
                       >
-                        <Check size={18} className="inline mr-1" />
-                        Save
+                        <Check size={16} /> Save
                       </button>
                       <button
                         onClick={() => setEditingDish(null)}
-                        className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold"
+                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-lg flex items-center gap-1"
                       >
-                        <X size={18} className="inline mr-1" />
-                        Cancel
+                        <X size={16} /> Cancel
                       </button>
                     </div>
-                  </div>
+                  </>
                 ) : (
                   <>
                     <div>
-                      <p className="text-white font-bold text-lg flex items-center gap-2">
+                      <p className="text-lg font-bold text-gray-800 flex items-center gap-2">
                         {dish.emoji} {dish.name}
                       </p>
-                      <p className="text-gray-300 text-sm">
+                      <p className="text-gray-500 text-sm">
                         {dish.category} • ₹{dish.price}
                       </p>
+                      <p className="text-gray-600 text-sm mt-2">{dish.description}</p>
                     </div>
-                    <div className="flex gap-3">
+                    <div className="flex justify-end gap-3 mt-3">
                       <button
                         onClick={() => handleEditDish(dish)}
-                        className="text-yellow-400 hover:text-yellow-300 transition-colors"
+                        className="text-purple-600 hover:text-purple-800 transition-colors"
                       >
-                        <Edit2 size={20} />
+                        <Edit2 size={18} />
                       </button>
                       <button
                         onClick={() => handleDeleteDish(dish.id)}
-                        className="text-red-400 hover:text-red-300 transition-colors"
+                        className="text-red-500 hover:text-red-700 transition-colors"
                       >
-                        <Trash2 size={20} />
+                        <Trash2 size={18} />
                       </button>
                     </div>
                   </>

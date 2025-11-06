@@ -1,94 +1,178 @@
-import React from "react";
-import { LogOut, PlusCircle, Eye, Users, Utensils } from "lucide-react";
+import React, { useState } from "react";
+import {
+  LogOut,
+  Menu,
+  PlusCircle,
+  Eye,
+  Users,
+  Utensils,
+  LayoutDashboard,
+  ChevronLeft,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useCashierStore from "../zustand-stores/cashierStore";
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const user = useCashierStore(state => state.user)
-  console.log(user)
-  const logout = useCashierStore(state => state.logout)
+  const logout = useCashierStore((state) => state.logout);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   const handleLogout = () => {
     localStorage.removeItem("admin");
     localStorage.removeItem("token");
     sessionStorage.clear();
-    logout()
+    logout();
     navigate("/");
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-purple-950 to-slate-900 text-white p-6 sm:p-8 font-sans relative overflow-hidden">
-      <header className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-10 border-b border-purple-800/40 pb-4 relative">
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-wide bg-gradient-to-r from-purple-400 to-pink-200 bg-clip-text text-transparent text-center sm:text-left">
-          Admin Dashboard
-        </h1>
+    <div className="flex min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 text-gray-900 font-sans">
 
-        <div className="flex items-center space-x-4 sm:space-x-6">
-          <span className="text-base sm:text-lg font-semibold text-purple-200">
-            Welcome, Admin 👑
-          </span>
+      <aside
+        className={`${isSidebarOpen ? "w-64" : "w-20"
+          } bg-white shadow-xl border-r border-orange-200 transition-all duration-300 flex flex-col`}
+      >
+
+        <div className="flex items-center justify-between px-4 py-5 border-b border-orange-100">
+          <div className="flex items-center gap-2">
+            <Utensils className="text-orange-500" size={24} />
+            {isSidebarOpen && (
+              <span className="text-xl font-bold text-orange-600">Admin</span>
+            )}
+          </div>
           <button
-            onClick={handleLogout}
-            className="hover:text-red-400 transition-transform transform hover:scale-110"
-            title="Logout"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+            className="p-2 rounded-lg hover:bg-orange-100 text-orange-600 transition-all"
           >
-            <LogOut size={26} />
+            {isSidebarOpen ? <ChevronLeft size={20} /> : <Menu size={20} />}
           </button>
         </div>
-      </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-       
-        <div className="bg-black bg-opacity-60 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-purple-700/30 transition-transform hover:scale-[1.02] duration-300">
-          <h2 className="text-2xl font-semibold text-purple-300 mb-6">
-            Restaurant Management
-          </h2>
 
-          <div className="flex flex-col space-y-5">
-            <button
-              onClick={() => navigate("/restaurant")}
-              className="bg-gradient-to-r from-purple-500 to-pink-800 hover:from-purple-800 hover:to-pink-700 transition-all duration-300 px-6 py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center space-x-2"
-            >
-              <PlusCircle size={22} />
-              <span>Add Restaurant</span>
-            </button>
+        <nav className="flex-1 px-3 py-6 space-y-3">
+          <SidebarButton
+            icon={<LayoutDashboard size={20} />}
+            label="Dashboard"
+            isOpen={isSidebarOpen}
+            onClick={() => navigate("/admin")}
+          />
+          <SidebarButton
+            icon={<Utensils size={20} />}
+            label="Restaurants"
+            isOpen={isSidebarOpen}
+            onClick={() => navigate("/restaurant")}
+          />
+          <SidebarButton
+            icon={<Eye size={20} />}
+            label="Orders"
+            isOpen={isSidebarOpen}
+            onClick={() => navigate("/adminorderlist")}
+          />
+          <SidebarButton
+            icon={<Users size={20} />}
+            label="Staff"
+            isOpen={isSidebarOpen}
+            onClick={() => navigate("/addcashier")}
+          />
+          <SidebarButton
+            icon={<PlusCircle size={20} />}
+            label="Menu"
+            isOpen={isSidebarOpen}
+            onClick={() => navigate("/changemenu")}
+          />
+        </nav>
 
-            <button
-              onClick={() => navigate("/adminorderlist")}
-              className="bg-gradient-to-r from-indigo-400 to-blue-600 hover:from-indigo-800 hover:to-blue-600 transition-all duration-300 px-6 py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center space-x-2"
-            >
-              <Eye size={22} />
-              <span>View Order List</span>
-            </button>
+
+        <div className="border-t border-orange-100 p-4">
+          <button
+            onClick={handleLogout}
+            className="flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold w-full py-2 rounded-lg shadow transition-all"
+          >
+            <LogOut size={20} />
+            {isSidebarOpen && "Logout"}
+          </button>
+        </div>
+      </aside>
+
+
+      <main className="flex-1 p-6 sm:p-10 overflow-y-auto">
+        <header className="flex flex-col sm:flex-row justify-between items-center mb-8 border-b border-orange-200 pb-4">
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-orange-600 text-center sm:text-left">
+            Admin Dashboard
+          </h1>
+          <span className="text-lg font-semibold text-gray-700">
+            Welcome, Admin 👑
+          </span>
+        </header>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+          <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-orange-200 hover:shadow-2xl transition-all duration-300">
+            <h2 className="text-xl font-bold text-orange-600 mb-6 flex items-center gap-2">
+              <Utensils className="text-orange-500" />
+              Restaurant Management
+            </h2>
+            <div className="flex flex-col space-y-4">
+              <button
+                onClick={() => navigate("/restaurant")}
+                className="flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded-lg shadow transition-all duration-200"
+              >
+                <PlusCircle size={20} />
+                Add Restaurant
+              </button>
+              <button
+                onClick={() => navigate("/adminorderlist")}
+                className="flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-lg shadow transition-all duration-200"
+              >
+                <Eye size={20} />
+                View Orders
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-orange-200 hover:shadow-2xl transition-all duration-300">
+            <h2 className="text-xl font-bold text-orange-600 mb-6 flex items-center gap-2">
+              <Users className="text-orange-500" />
+              Staff & Menu Management
+            </h2>
+            <div className="flex flex-col space-y-4">
+              <button
+                onClick={() => navigate("/addcashier")}
+                className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-lg shadow transition-all duration-200"
+              >
+                <Users size={20} />
+                Add Cashier
+              </button>
+              <button
+                onClick={() => navigate("/changemenu")}
+                className="flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-3 rounded-lg shadow transition-all duration-200"
+              >
+                <Utensils size={20} />
+                Change Menu
+              </button>
+            </div>
           </div>
         </div>
 
-        
-        <div className="bg-black bg-opacity-60 backdrop-blur-lg rounded-3xl p-8 shadow-2xl border border-purple-700/30 transition-transform hover:scale-[1.02] duration-300">
-          <h2 className="text-2xl font-semibold text-purple-300 mb-6">
-            Staff & Menu Management
-          </h2>
-
-          <div className="flex flex-col space-y-5">
-            <button
-              onClick={() => navigate("/addcashier")}
-              className="bg-gradient-to-r from-green-400 to-emerald-600 hover:from-green-800 hover:to-emerald-600 transition-all duration-300 px-6 py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center space-x-2"
-            >
-              <Users size={22} />
-              <span>Add Cashier</span>
-            </button>
-
-            <button
-              onClick={() => navigate("/changemenu")}
-              className="bg-gradient-to-r from-yellow-200 to-orange-600 hover:from-yellow-600 hover:to-orange-500 transition-all duration-300 px-6 py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center space-x-2"
-            >
-              <Utensils size={22} />
-              <span>Change Menu</span>
-            </button>
-          </div>
-        </div>
-      </div>
+        <footer className="text-center text-gray-500 text-xs sm:text-sm mt-10 sm:mt-14">
+          © {new Date().getFullYear()} Restaurant POS | Powered by{" "}
+          <span className="text-orange-500 font-semibold">Cashier App</span>
+        </footer>
+      </main>
     </div>
   );
 };
 
+
+const SidebarButton = ({ icon, label, isOpen, onClick }) => (
+  <button
+    onClick={onClick}
+    className="flex items-center gap-3 w-full text-left px-3 py-3 rounded-lg hover:bg-orange-100 text-gray-700 font-medium transition-all"
+  >
+    {icon}
+    {isOpen && <span className="truncate">{label}</span>}
+  </button>
+);
+
 export default AdminDashboard;
+
