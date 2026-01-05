@@ -38,6 +38,7 @@ exports.createOrder = async (req, res) => {
         menuItemName: menuItem.menuItemName,
         quantity: quantity,
         price: menuItem.price,
+        emoji: menuItem.emoji,
       });
     }
 

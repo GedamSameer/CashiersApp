@@ -31,6 +31,3 @@ export const UpdateOrderStatus = async (id, status) =>
   );
 export const DeleteOrderById = async (id) =>
   makeRequest(() => axiosInstance.delete(`/api/orders/${id}`));
-
-
-

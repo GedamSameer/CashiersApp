@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { LogOut, Clock, ChevronDown, CheckCircle2, X } from "lucide-react";
+import {
+  LogOut,
+  Clock,
+  ChevronDown,
+  CheckCircle2,
+  X,
+  Utensils,
+} from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useCashierStore from "../zustand-stores/cashierStore";
 import useOrderStore from "../zustand-stores/orderStore";
@@ -289,7 +296,7 @@ const CashierDashboard = () => {
                       className="flex justify-between items-center bg-gray-50 rounded-lg p-4 border border-gray-100"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-2xl">🍽️</span>
+                        <span className="text-2xl">{item.emoji || "🍽️"}</span>
                         <div>
                           <p className="text-gray-800 font-semibold">
                             {item.menuItemName}

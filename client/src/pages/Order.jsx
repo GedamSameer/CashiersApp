@@ -262,7 +262,7 @@ const Order = () => {
                       className="flex justify-between items-center bg-gray-50 rounded-lg p-4 border border-gray-100"
                     >
                       <div className="flex items-center gap-3">
-                        <span className="text-2xl">🍽️</span>
+                        <span className="text-2xl">{item.emoji || "🍽️"}</span>
                         <div>
                           <p className="text-gray-800 font-semibold">
                             {item.menuItemName}
