@@ -61,9 +61,9 @@ const Reports = () => {
       .slice(0, 5)
       .map(([name, count]) => ({ name, count }));
 
-    // Revenue and orders by day (last 7 days)
+    // Revenue and orders by day (last 7 days, newest first)
     const last7Days = [];
-    for (let i = 6; i >= 0; i--) {
+    for (let i = 0; i <= 6; i++) {
       const date = new Date();
       date.setDate(date.getDate() - i);
       const dateString = date.toDateString();
