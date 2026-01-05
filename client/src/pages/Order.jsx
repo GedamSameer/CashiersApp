@@ -37,10 +37,12 @@ const Order = () => {
 
   const today = new Date().toDateString();
 
-  const todaysOrders = orders.filter((order) => {
-    const orderDate = new Date(order.createdAt).toDateString();
-    return orderDate === today;
-  });
+  const todaysOrders = orders
+    .filter((order) => {
+      const orderDate = new Date(order.createdAt).toDateString();
+      return orderDate === today;
+    })
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
   const totalOrders = todaysOrders.length;
   const totalRevenue = todaysOrders.reduce((sum, o) => sum + o.totalAmount, 0);
