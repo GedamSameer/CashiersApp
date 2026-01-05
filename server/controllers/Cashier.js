@@ -56,8 +56,9 @@ exports.currentUser = async (req,res) => {
         if(req.user.role){
           return res.status(200).json({email: process.env.ADMIN_EMAIL, role: true})
         }
-        const customer = await Customer.findById(req.user.id)
-        return res.status(200).json(customer)
+        const cashier = await Cashier.findById(req.user.id)
+        if(!cashier) return res.status(404).json({error: "Cashier not found"})
+        return res.status(200).json(cashier)
     }catch(err){
         console.log(err)
         return res.status(500).json({error: err.message})
