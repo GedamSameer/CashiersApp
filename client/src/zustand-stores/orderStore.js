@@ -148,14 +148,13 @@ const orderStore = (set) => ({
   },
 
   updateOrderStatus: async (id, status) => {
-    set({ loading: true, error: null });
+    // Don't set loading to true to avoid UI flickering
     const { data, error } = await UpdateOrderStatus(id, status);
     if (error) {
-      set({ loading: false, error });
+      set({ error });
     } else {
-      // Update the order in the orders list
+      // Update the order in the orders list without loading state
       set((state) => ({
-        loading: false,
         orders: state.orders.map((order) =>
           order.id === id ? { ...order, status } : order
         ),
