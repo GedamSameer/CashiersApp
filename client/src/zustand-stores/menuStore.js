@@ -21,7 +21,7 @@ const menuStore = (set) => ({
         name: item.menuItemName,
         price: item.price,
         category: item.category,
-        image: item.emoji,
+        emoji: item.emoji,
       }));
 
       set({ loading: false, menuItems: transformedMenuItems, error: null });

@@ -1,22 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PlusCircle, Trash2, Edit2, X, Check, Search } from "lucide-react";
+import useMenuStore from "../zustand-stores/menuStore";
 
 const ChangeMenu = () => {
-  const [menu, setMenu] = useState([
-    { id: 1, name: "Masala Chai", price: 40, category: "Beverages", emoji: "☕", description: "Traditional Indian spiced tea brewed with milk and aromatic spices." },
-    { id: 2, name: "Veg Sandwich", price: 120, category: "Snacks", emoji: "🥪", description: "Fresh vegetables layered with butter and chutney between toasted bread slices." },
-    { id: 3, name: "Pizza", price: 280, category: "Main Course", emoji: "🍕", description: "Cheesy pizza topped with vegetables and herbs baked to perfection." },
-    { id: 4, name: "Gulab Jamun", price: 80, category: "Dessert", emoji: "🍡", description: "Soft and sweet fried dumplings soaked in warm sugar syrup." },
-    { id: 5, name: "Fresh Juice", price: 90, category: "Beverages", emoji: "🧃", description: "Refreshing seasonal fruit juice served chilled." },
-   
-    { id: 6, name: "Herbal Tea", price: 50, category: "Beverages", emoji: "🍵", description: "A soothing blend of herbs and green tea leaves to calm your senses." },
-    { id: 7, name: "Pasta Alfredo", price: 220, category: "Main Course", emoji: "🍝", description: "Creamy white sauce pasta with herbs, cheese, and sautéed vegetables." },
-    { id: 8, name: "Samosa", price: 30, category: "Snacks", emoji: "🥟", description: "Crispy fried pastry filled with spicy potato mixture." },
-    { id: 9, name: "Chocolate Cake", price: 140, category: "Dessert", emoji: "🍰", description: "Moist chocolate sponge layered with rich chocolate frosting." },
-    { id: 10, name: "Cold Coffee", price: 90, category: "Beverages", emoji: "🥤", description: "Iced coffee blended with milk, cream, and sugar." },
-  ]);
+  const { menuItems, getAllMenuItems, loading } = useMenuStore();
+  const [menu, setMenu] = useState([]);
 
-  const [newDish, setNewDish] = useState({ name: "", price: "", category: "", emoji: "", description: "" });
+  useEffect(() => {
+    getAllMenuItems();
+  }, [getAllMenuItems]);
+
+  useEffect(() => {
+    if (menuItems && menuItems.length > 0) {
+      setMenu(menuItems);
+    }
+  }, [menuItems]);
+
+  const [newDish, setNewDish] = useState({ name: "", price: "", category: "", emoji: "" });
   const [editingDish, setEditingDish] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
@@ -30,7 +30,7 @@ const ChangeMenu = () => {
       ...menu,
       { ...newDish, id: Date.now(), price: parseFloat(newDish.price) },
     ]);
-    setNewDish({ name: "", price: "", category: "", emoji: "", description: "" });
+    setNewDish({ name: "", price: "", category: "", emoji: "" });
   };
 
   const handleDeleteDish = (id) => setMenu(menu.filter((dish) => dish.id !== id));
@@ -89,13 +89,7 @@ const ChangeMenu = () => {
               onChange={(e) => setNewDish({ ...newDish, emoji: e.target.value })}
               className="p-2 rounded-lg text-black"
             />
-            <textarea
-              placeholder="Description"
-              value={newDish.description}
-              onChange={(e) => setNewDish({ ...newDish, description: e.target.value })}
-              className="p-2 rounded-lg text-black"
-              rows="2"
-            />
+
             <button
               onClick={handleAddDish}
               className="bg-orange-500 hover:bg-orange-600 transition-all duration-200 p-2 rounded-lg mt-2 font-bold text-white"
@@ -106,11 +100,11 @@ const ChangeMenu = () => {
         </div>
 
         <p className="text-sm text-center text-purple-200 mt-6">
-          💡 Tip: Add emojis and descriptions for a more engaging menu.
+          💡 Tip: Add emojis for a more engaging menu.
         </p>
       </div>
 
-    
+      
       <div className="flex-1 bg-white rounded-2xl shadow-lg p-6 overflow-y-auto">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
           <h2 className="text-2xl font-semibold text-gray-800">Manage Menu</h2>
@@ -123,7 +117,7 @@ const ChangeMenu = () => {
               placeholder="Search dishes..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 p-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:outline-none"
+              className="pl-10 p-2 w-full rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:outline-none text-gray-900 placeholder-gray-500"
             />
           </div>
         </div>
@@ -145,12 +139,14 @@ const ChangeMenu = () => {
           ))}
         </div>
 
-     
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredMenu.length === 0 ? (
-            <p className="text-gray-500 col-span-full text-center">No dishes found.</p>
-          ) : (
-            filteredMenu.map((dish) => (
+        {loading ? (
+          <p className="text-gray-500 text-center py-8">Loading menu items...</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredMenu.length === 0 ? (
+              <p className="text-gray-500 col-span-full text-center">No dishes found.</p>
+            ) : (
+              filteredMenu.map((dish) => (
               <div
                 key={dish.id}
                 className="bg-gray-50 hover:bg-purple-50 border border-gray-200 rounded-xl p-4 transition-all shadow-sm hover:shadow-md flex flex-col justify-between"
@@ -169,12 +165,7 @@ const ChangeMenu = () => {
                       onChange={(e) => setEditingDish({ ...editingDish, price: parseFloat(e.target.value) })}
                       className="p-2 rounded-lg text-black border mt-2"
                     />
-                    <textarea
-                      value={editingDish.description}
-                      onChange={(e) => setEditingDish({ ...editingDish, description: e.target.value })}
-                      className="p-2 rounded-lg text-black border mt-2"
-                      rows="2"
-                    />
+
                     <select
                       value={editingDish.category}
                       onChange={(e) => setEditingDish({ ...editingDish, category: e.target.value })}
@@ -208,7 +199,7 @@ const ChangeMenu = () => {
                       <p className="text-gray-500 text-sm">
                         {dish.category} • ₹{dish.price}
                       </p>
-                      <p className="text-gray-600 text-sm mt-2">{dish.description}</p>
+
                     </div>
                     <div className="flex justify-end gap-3 mt-3">
                       <button
@@ -227,9 +218,10 @@ const ChangeMenu = () => {
                   </>
                 )}
               </div>
-            ))
-          )}
-        </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
