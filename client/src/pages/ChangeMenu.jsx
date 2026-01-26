@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { PlusCircle, Trash2, Edit2, X, Check, Search } from "lucide-react";
 import useMenuStore from "../zustand-stores/menuStore";
+import { CreateMenuItem, DeleteMenuItemById, UpdateMenuItemById } from "../api-calls/Menu";
 
 const ChangeMenu = () => {
   const { menuItems, getAllMenuItems, loading } = useMenuStore();
@@ -23,24 +24,53 @@ const ChangeMenu = () => {
 
   const categories = ["All", "Beverages", "Snacks", "Starters", "Main Course", "Breads", "Dessert"];
 
-  const handleAddDish = () => {
+  const handleAddDish = async () => {
     if (!newDish.name || !newDish.price || !newDish.category)
       return alert("Please fill all required fields!");
-    setMenu([
-      ...menu,
-      { ...newDish, id: Date.now(), price: parseFloat(newDish.price) },
-    ]);
-    setNewDish({ name: "", price: "", category: "", emoji: "" });
+    
+    const payload = {
+      menuItemName: newDish.name,
+      price: parseFloat(newDish.price),
+      category: newDish.category,
+      emoji: newDish.emoji,
+    };
+
+    const { data, error } = await CreateMenuItem(payload);
+    if (error) {
+      alert("Error adding dish: " + error);
+    } else {
+      setNewDish({ name: "", price: "", category: "", emoji: "" });
+      await getAllMenuItems();
+    }
   };
 
-  const handleDeleteDish = (id) => setMenu(menu.filter((dish) => dish.id !== id));
+  const handleDeleteDish = async (id) => {
+    const { error } = await DeleteMenuItemById(id);
+    if (error) {
+      alert("Error deleting dish: " + error);
+    } else {
+      await getAllMenuItems();
+    }
+  };
+
+  const handleSaveEdit = async () => {
+    const payload = {
+      menuItemName: editingDish.name,
+      price: editingDish.price,
+      category: editingDish.category,
+      emoji: editingDish.emoji,
+    };
+
+    const { error } = await UpdateMenuItemById(editingDish.id, payload);
+    if (error) {
+      alert("Error updating dish: " + error);
+    } else {
+      setEditingDish(null);
+      await getAllMenuItems();
+    }
+  };
 
   const handleEditDish = (dish) => setEditingDish(dish);
-
-  const handleSaveEdit = () => {
-    setMenu(menu.map((dish) => (dish.id === editingDish.id ? editingDish : dish)));
-    setEditingDish(null);
-  };
 
   const filteredMenu = menu.filter((dish) => {
     const matchesSearch = dish.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -51,7 +81,7 @@ const ChangeMenu = () => {
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row px-4 py-6 md:px-8 md:py-10">
       
-      <div className="bg-gradient-to-br from-purple-700 to-purple-900 text-white rounded-2xl shadow-xl p-6 w-full md:w-1/3 mb-6 md:mb-0 md:mr-6 flex flex-col justify-between">
+      <div className="bg-gradient-to-br from-purple-700 to-purple-900 text-white rounded-2xl shadow-xl p-6 w-full md:w-1/5 mb-6 md:mb-0 md:mr-6 flex flex-col justify-between">
         <div>
           <h1 className="text-2xl font-bold mb-6 flex items-center gap-2">
             <PlusCircle size={26} /> Add New Dish
@@ -84,7 +114,7 @@ const ChangeMenu = () => {
             </select>
             <input
               type="text"
-              placeholder="Emoji (optional)"
+              placeholder="Emoji"
               value={newDish.emoji}
               onChange={(e) => setNewDish({ ...newDish, emoji: e.target.value })}
               className="p-2 rounded-lg text-black"
@@ -142,7 +172,7 @@ const ChangeMenu = () => {
         {loading ? (
           <p className="text-gray-500 text-center py-8">Loading menu items...</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {filteredMenu.length === 0 ? (
               <p className="text-gray-500 col-span-full text-center">No dishes found.</p>
             ) : (
@@ -175,6 +205,12 @@ const ChangeMenu = () => {
                         <option key={cat}>{cat}</option>
                       ))}
                     </select>
+                    <input
+                      type="text"
+                      value={editingDish.emoji}
+                      onChange={(e) => setEditingDish({ ...editingDish, emoji: e.target.value })}
+                      className="p-2 rounded-lg text-black border mt-2"
+                    />
                     <div className="flex justify-end gap-2 mt-3">
                       <button
                         onClick={handleSaveEdit}
